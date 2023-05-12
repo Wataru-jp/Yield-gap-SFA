@@ -8,18 +8,17 @@
 
 
 *** Myanmar 
-cd /Users/kodam1/Documents/document/研究/YieldGap/Data_final/dta
-use Myanmar_SFA2.dta, clear
+use "https://github.com/Wataru-jp/Yield-gap-SFA/raw/main/data/Myanmar.dta", clear
 gen sowing = abs(planting_date - 3)
 replace sowing = abs(planting_date - 37) if season == 1
-replace ln_N=asinh(N)
-replace ln_P=asinh(P)
-replace ln_K=asinh(K)
-gen ln_exp=asinh(farm_experience)
-replace variety2=1 if variety1==1 
-gen income = rincome_season/tincome*100
+replace ln_N = asinh(N)
+replace ln_P = asinh(P)
+replace ln_K = asinh(K)
+gen ln_exp = asinh(farm_experience)
+replace variety2=1 if variety1 == 1 
+gen income = rincome_season/ tincome* 100
 * Dry season 
-eststo model1d: sfcross ln_yield ln_N variety2 variety3 sowing herbicide if season==0, ///
+eststo model1d: sfcross ln_yield ln_N variety2 variety3 sowing herbicide if season == 0, ///
 emean( fertsplits ln_exp income ) distribution(tnormal) nolog
 estadd scalar sigma =  e(sigma_u)+e(sigma_v)
 estadd scalar lambda2 =  e(sigma_u)/(e(sigma_u)+e(sigma_v))
@@ -32,7 +31,7 @@ emean( fertsplits ln_exp income) distribution(tnormal) nolog
 estadd scalar sigma =  e(sigma_u)+e(sigma_v)
 estadd scalar lambda2 =  e(sigma_u)/(e(sigma_u)+e(sigma_v))
 predict exp_u_w, jlms
-su exp_u_w if season==1
+su exp_u_w if season == 1
 estadd scalar tscore =  r(mean)
 * save temp 
 gen exp_u = exp_u_d
@@ -43,14 +42,13 @@ save `Myanmar', replace
 
 
 *** Vietnam 
-cd /Users/kodam1/Documents/document/研究/YieldGap/Data_final/dta
-use Vietnam_SFA2.dta, clear
+use "https://github.com/Wataru-jp/Yield-gap-SFA/raw/main/data/Vietnam.dta", clear
 gen sowing = abs(planting_date - 48)
 replace sowing = abs(planting_date - 18) if season == 1
-replace ln_N=asinh(N)
-replace ln_P=asinh(P)
-replace ln_K=asinh(K)
-gen ln_exp=asinh(farm_experience)
+replace ln_N = asinh(N)
+replace ln_P = asinh(P)
+replace ln_K = asinh(K)
+gen ln_exp = asinh(farm_experience)
 gen income = rincome_season/tincome*100
 * Dry season 
 eststo model2d: sfcross ln_yield ln_N ln_P ln_K variety1 sowing herbicide if season==0, ///
@@ -61,7 +59,7 @@ predict exp_u_d, jlms
 su exp_u_d if season==0
 estadd scalar tscore =  r(mean)
 * Wet season 
-eststo model2w: sfcross ln_yield ln_N ln_P ln_K variety1 sowing if season==1, ///
+eststo model2w: sfcross ln_yield ln_N ln_P ln_K variety1 sowing if season == 1, ///
 emean( fertsplits ln_exp income) distribution(tnormal) nolog
 estadd scalar sigma = e(sigma_u)+e(sigma_v)
 estadd scalar lambda2 = e(sigma_u)/(e(sigma_u)+e(sigma_v))
@@ -77,20 +75,19 @@ save `Vietnam', replace
 
 
 *** Thailand
-cd /Users/kodam1/Documents/document/研究/YieldGap/Data_final/dta
-use Thailand_SFA2.dta, clear
+use "https://github.com/Wataru-jp/Yield-gap-SFA/raw/main/data/Thailand.dta", clear
 gen sowing = abs(planting_date - 51)
 replace sowing = abs(planting_date - 22) if season == 1
 //drop if yield<200
-replace ln_N=asinh(N)
-replace ln_P=asinh(P)
-replace ln_K=asinh(K)
-gen ln_exp=asinh(farm_experience)
+replace ln_N = asinh(N)
+replace ln_P = asinh(P)
+replace ln_K = asinh(K)
+gen ln_exp = asinh(farm_experience)
 gen income = rincome_season/tincome*100
 * Dry season 
 eststo model3d: sfcross ln_yield ln_N
 * Wet season 
-eststo model3w: sfcross ln_yield ln_N ln_P ln_K variety2 sowing herbicide if season==1, ///
+eststo model3w: sfcross ln_yield ln_N ln_P ln_K variety2 sowing herbicide if season == 1, ///
 emean( fertsplits ln_exp income) distribution(tnormal) nolog
 estadd scalar sigma =  e(sigma_u)+e(sigma_v)
 estadd scalar lambda2 =  e(sigma_u)/(e(sigma_u)+e(sigma_v))
@@ -107,34 +104,33 @@ save `Thailand', replace
 
 
 *** Indonesia
-cd /Users/kodam1/Documents/document/研究/YieldGap/Data_final/dta
-use Indonesia_SFA2.dta, clear
+use "https://github.com/Wataru-jp/Yield-gap-SFA/raw/main/data/Indonesia.dta", clear
 gen sowing = abs(planting_date - 23)
 replace sowing = abs(planting_date - 51) if season == 1
-replace ln_N=asinh(N)
-replace ln_P=asinh(P)
-replace ln_K=asinh(K)
-gen ln_exp=asinh(farm_experience)
+replace ln_N = asinh(N)
+replace ln_P = asinh(P)
+replace ln_K = asinh(K)
+gen ln_exp = asinh(farm_experience)
 gen income = rincome_season/tincome*100
 * Dry season 
-eststo model4d: sfcross ln_yield ln_N ln_P variety1 sowing if season==0 & ln_yield>7, ///
+eststo model4d: sfcross ln_yield ln_N ln_P variety1 sowing if season == 0 & ln_yield > 7, ///
 emean( fertsplits ln_exp income) distribution(tnormal) nolog
 estadd scalar sigma =  e(sigma_u)+e(sigma_v)
 estadd scalar lambda2 =  e(sigma_u)/(e(sigma_u)+e(sigma_v))
 predict exp_u_d, jlms
-su exp_u_d if season==0
+su exp_u_d if season == 0
 estadd scalar tscore =  r(mean)
 * Wet season 
-eststo model4w: sfcross ln_yield ln_N ln_P variety1 sowing if season==1, ///
+eststo model4w: sfcross ln_yield ln_N ln_P variety1 sowing if if season == 1, ///
 emean( fertsplits ln_exp income) distribution(tnormal) nolog 
 estadd scalar sigma =  e(sigma_u)+e(sigma_v)
 estadd scalar lambda2 =  e(sigma_u)/(e(sigma_u)+e(sigma_v))
 predict exp_u_w, jlms
-su exp_u_w if season==1
+su exp_u_w if season == 1
 estadd scalar tscore =  r(mean)
 * save temp 
 gen exp_u = exp_u_d
-replace exp_u = exp_u_w if season==1
+replace exp_u = exp_u_w if season == 1
 replace country = "Indonesia"
 tempfile Indonesia
 save `Indonesia', replace
@@ -178,7 +174,6 @@ xlabel(0(0.2)1) ylabel(0 " ") yscale(range(0 5))	///
 by(season, note("") graphregion(fcolor(white))) ///
 ytitle("Density") xtitle("Efficiency yield gap")  ///
 legend(order(1 "Myanmar" 2 "Vietnam" 3 "Thailand" 4 "Indonesia")) 
-graph export "/Users/kodam1/Desktop/YieldGap/SFA/latex/fig1.jpg", as(jpg) name("Graph") quality(100) replace
  
 * Fig 6
 twoway scatter y yield if country=="Myanmar", msize(tiny) mcolor(gs4) xlabel(0(2)11) ylabel(0(2)13) graphregion(color(white)) ///
@@ -189,7 +184,6 @@ twoway scatter y yield if country=="Myanmar", msize(tiny) mcolor(gs4) xlabel(0(2
 by(season, note("") graphregion(fcolor(white))) ///
 ytitle("Technical efficient yield (t/ha)") xtitle("Actual yield (t/ha)") ///
 legend(order(1 "Myanmar" 2 "Vietnam" 3 "Thailand" 4 "Indonesia")) 
-graph export "/Users/kodam1/Desktop/YieldGap/SFA/latex/fig2.jpg", as(jpg) name("Graph") quality(100) replace
 
 twoway scatter y yield if country=="Myanmar" & season==0, msize(tiny) mcolor(gs4) xlabel(0(2)11) ylabel(0(2)15) graphregion(color(white)) xsize(5) ysize(4.5) ///
 || scatter y yield if country=="Vietnam" & season==0 & y<14, msize(tiny) mcolor(midblue) msymbol(0) ///
@@ -198,7 +192,6 @@ twoway scatter y yield if country=="Myanmar" & season==0, msize(tiny) mcolor(gs4
 || function y=0.99*x, range(0 11) color(gs5) lpattern(solid) /// 
 ytitle("Technical efficient yield (t/ha)") xtitle("Actual yield (t/ha)") ///
 legend(order(1 "Myanmar" 2 "Vietnam" 3 "Thailand" 4 "Indonesia")) 
-graph export "/Users/kodam1/Desktop/YieldGap/SFA/latex/fig2a.jpg", as(jpg) name("Graph") quality(100) replace
 
 twoway scatter y yield if country=="Myanmar" & season==1, msize(tiny) mcolor(gs4) xlabel(0(2)11) ylabel(0(2)13) graphregion(color(white)) xsize(5) ysize(4.5) ///
 || scatter y yield if country=="Vietnam" & season==1 & y<13, msize(tiny) mcolor(midblue) msymbol(0) ///
@@ -207,7 +200,6 @@ twoway scatter y yield if country=="Myanmar" & season==1, msize(tiny) mcolor(gs4
 || function y=0.99*x, range(0 11) color(gs5) lpattern(solid) /// 
 ytitle("Technical efficient yield (t/ha)") xtitle("Actual yield (t/ha)") ///
 legend(order(1 "Myanmar" 2 "Vietnam" 3 "Thailand" 4 "Indonesia")) 
-graph export "/Users/kodam1/Desktop/YieldGap/SFA/latex/fig2b.jpg", as(jpg) name("Graph") quality(100) replace
 
 
 
@@ -267,7 +259,7 @@ eststo T1: qui estpost su actual_yield farm_size N P K herbicide sowing variety1
 eststo I0: qui estpost su actual_yield farm_size N P K herbicide sowing variety1 variety2 variety3 variety4  fertsplits threshing harvest education farm_experience land_ownership income if country == "Indonesia" & season == 0
 eststo I1: qui estpost su actual_yield farm_size N P K herbicide sowing variety1 variety2 variety3 variety4  fertsplits threshing harvest education farm_experience land_ownership income if country == "Indonesia" & season == 1
 
-cd /Users/kodam1/Documents/document/研究/YieldGap/SFA/latex
+cd ""
 esttab M0 M1 V0 V1 T0 T1 I0 I1 using table1.tex, replace ///
 label cells(mean(pattern(1 1 1 1 1 1 1 1) fmt(2)) sd(par)) nogap nonotes ///
 nonumber nomtitles ///
@@ -276,7 +268,6 @@ mgroups("Myanmar" "Vietnam" "Thailand" "Indonesia", ///
 		span prefix(\multicolumn{@span}{c}{) suffix(}) ///
 		erepeat(\cmidrule(lr){@span})) 
 
-cd /Users/kodam1/Documents/document/研究/YieldGap/MSword
 esttab M0 M1 V0 V1 T0 T1 I0 I1 using table1.rtf, replace ///
 label cells(mean(pattern(1 1 1 1 1 1 1 1) fmt(2)) sd(par)) nogap nonotes ///
 nonumber nomtitles ///
@@ -287,7 +278,6 @@ mgroups("Myanmar" "Vietnam" "Thailand" "Indonesia", ///
 
 
 ** Table 3
-cd /Users/kodam1/Documents/document/研究/YieldGap/SFA/latex
 label var Area "Farm size log"
 label var ln_exp "Farm experience log"
 label var herbicide "Herbicide use"
@@ -306,7 +296,6 @@ mgroups("Myanmar" "Vietnam" "Thailand" "Indonesia", ///
 		pattern(1 0 1 0 1 1 0) ///
 		span prefix(\multicolumn{@span}{c}{) suffix(}))
 
-cd /Users/kodam1/Documents/document/研究/YieldGap/MSword
 esttab model1d model1w model2d model2w model3w model4d model4w using table3.rtf, replace ///
 	se label nogap nonotes b(%4.3f) ///
 	star(* 0.1 ** 0.05 *** 0.01)  ///
@@ -314,6 +303,3 @@ esttab model1d model1w model2d model2w model3w model4d model4w using table3.rtf,
 	s(chi2 tscore sigma lambda2 N, fmt(%9.2f %9.3f %9.3f %9.3g %9.0g) labels("Wald Chi-squared" "TE score" "$\sigma^2=\sigma^2_u+\sigma^2_v$" "$\lambda=\sigma^2_u/\sigma^2$" "Observations")) ///
 mgroups("Myanmar" "Vietnam" "Thailand" "Indonesia", ///
 		pattern(1 0 1 0 1 1 0))
-
-		
-keep(ln_N ln_P ln_K variety1 variety2 variety3 planting_RANK fertsplits herbicide threshing education ln_exp _cons) ///
